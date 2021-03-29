@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: voting_app
+  results-api:
+    image: silverabel/va_results-api
+    ports:
+      - 8080:8080
+  voting-api:
+    image: silverabel/va_voting-api
+    ports:
+      - 8081:8080
+  worker:
+    image: silverabel/va_worker
+  frontend:
+    build: .
+    ports:
+      - 3000:3000
+    volumes:
+      - './src:/usr/src/app/src'
+    environment: 
+      - CHOKIDAR_USEPOLLING=true
+  rabbitmq:
+    image: rabbitmq:3-alpine
